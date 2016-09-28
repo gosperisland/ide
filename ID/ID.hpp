@@ -147,6 +147,11 @@ class ID {
         bool operator ==(const ID& other) const {
             return _discrete_points_for_all_dims == other._discrete_points_for_all_dims;
         }
+        
+        const Grid& get_grid() {
+            return _discrete_points_for_all_dims;
+        }
+
 };
 #endif
 

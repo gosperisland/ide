@@ -1,14 +1,4 @@
-#include <iostream>
-#include <armadillo>
-#include <ctime>
-#include "Learning.hpp"
-#include "Utils.hpp"
-
-using namespace std;
-using namespace arma;
-typedef std::vector<double> stdvec;
-typedef std::vector< std::vector<double> > stdvecvec;
-
+#include "ID_SGD_pairs_similarity_experiment.hpp"
 
 double code_to_time(){
     Utils utils;
@@ -16,10 +6,10 @@ double code_to_time(){
     Learning learn;
 
     //read original data to matrix
-    mat data = utils.load_file_to_matrix("/home/ubuntu/workspace/New/Learning_Tests_FIX/colors_v1.csv");
+    arma::mat data = utils.load_file_to_matrix("/home/ubuntu/workspace/New/Learning_Tests_FIX/colors_v1.csv");
     
-    mat x1(data.n_rows, 3);
-    mat x2(data.n_rows, 3);
+    arma::mat x1(data.n_rows, 3);
+    arma::mat x2(data.n_rows, 3);
     
     for (size_t i = 0; i < 3; ++i) 
         x1.col(i) = data.col(i);
@@ -27,9 +17,9 @@ double code_to_time(){
         x2.col(i-3) = data.col(i);
 
     
-    mat y_tag(data.n_rows, 1);
+    arma::mat y_tag(data.n_rows, 1);
     y_tag.col(0) = data.col(6);
-    mat data_for_disc(2*data.n_rows, 3);
+    arma::mat data_for_disc(2*data.n_rows, 3);
 
     for (size_t j = 0; j < x1.n_rows; ++j) 
         data_for_disc.row(j) = x1.row(j);
@@ -43,7 +33,7 @@ double code_to_time(){
     }std::cout << "\n\n" << std::endl;
   */  
     //find discrit points
-    mat dis_points = utils.find_discrit_points(data_for_disc,5);
+    arma::mat dis_points = utils.find_discrit_points(data_for_disc,5);
     
 /*    for(uword row=0; row < dis_points.n_rows; ++row){
         for(uword col=0; col < dis_points.n_cols; ++col){
@@ -72,18 +62,17 @@ double code_to_time(){
     
     learn.printvec(tags);
 
-    return 0;
 
-    cout << "unSimilar ratio: " << (double)counter_plus/(double)pairs.size() << endl;
-    cout << "Similar ratio: " << (double)counter_minus/(double)pairs.size() << endl;
+    std::cout << "unSimilar ratio: " << (double)counter_plus/(double)pairs.size() << std::endl;
+    std::cout << "Similar ratio: " << (double)counter_minus/(double)pairs.size() << std::endl;
     
     double thold = 1;
     std::vector<double> C = reg.c_vec_intialization();
     
     //get matrix sorted by rows [3][5]
-    stdvecvec dis_points2 = utils.mat_to_std_vec_2(dis_points);
+    std::vector< std::vector<double> > dis_points2 = utils.mat_to_std_vec_2(dis_points);
     
-    stdvecvec examples = utils.mat_to_std_vec(data_for_disc);
+    std::vector< std::vector<double> > examples = utils.mat_to_std_vec(data_for_disc);
 
     //learn.print2dvector(examples);      /////////////////////////
     //learn.printvec(tags);               /////////////////////////
@@ -104,13 +93,13 @@ double code_to_time(){
     for (size_t i = 0; i < C.size(); i++) {
         std::vector<double> W(Wreg.size(), 0);
         
-        learn.SGD(examples, pairs, tags, dis_points2,indices_of_groups,
+        learn(examples, pairs, tags, dis_points2,indices_of_groups,
                    id_pair, if_equal_dist_zero, if_non_equal_dist_non_zero, 
                    NON_EQUAL_EPSILON, symmetry, Wreg, C[i], W, thold);
     
         for (size_t j = 0; j < pairs.size(); j++) {
             std::vector<Pair> vol = id_pair( examples[ pairs[j][0] ], examples[ pairs[j][1] ] );
-            short s = learn.classification(W, vol, thold);
+            short s = learn.classify(W, vol, thold);
     
             if(s != tags[j]) numOfErrors++;
         }

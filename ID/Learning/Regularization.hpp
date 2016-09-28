@@ -1,6 +1,8 @@
 #ifndef _REGULARIZATION
 #define _REGULARIZATION
 
+#include "/home/ubuntu/workspace/ID/GridsOfGroups.hpp"
+
 class Regularization{
 public:
     Regularization() {}
@@ -67,16 +69,6 @@ public:
             
         return c_vec;
     }
-
-/*    std::vector<double> c_vec_intialization() {
-        std::vector<double> c_vec;
-        
-        for (int n = 150; n <= 500; n += 50)
-            c_vec.push_back(n);
-            
-        return c_vec;
-    }
-*/    
 };
 
 #endif

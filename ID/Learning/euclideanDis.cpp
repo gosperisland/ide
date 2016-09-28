@@ -1,14 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <stdio.h>
-#include <vector>
-#include <cassert>
-#include <exception>
-#include <time.h>
-#include "armadillo"
-#include "Learning.hpp"
-#include "/home/ubuntu/workspace/New/GridsOfGroups.hpp"
-using namespace arma;
+#include "ID_SGD_pairs_similarity_experiment.hpp"
 
 void testClassificationPairs() {
     const size_t numOfSamples = 2000;
@@ -24,17 +14,17 @@ void testClassificationPairs() {
 	const bool if_non_equal_dist_non_zero = true;
 	const double NON_EQUAL_EPSILON = std::numeric_limits<double>::epsilon();
 	
-    arma_rng::set_seed_random();
-    vec A = randi<vec>(numOfSamples/2, distr_param(0, 100));
-    vec B = randi<vec>(numOfSamples/2, distr_param(0, 200));
+    arma::arma_rng::set_seed_random();
+    arma::vec A = arma::randi<arma::vec>(numOfSamples/2, arma::distr_param(0, 100));
+    arma::vec B = arma::randi<arma::vec>(numOfSamples/2, arma::distr_param(0, 200));
     
     for (size_t i = 0; i < A.size(); ++i) {
         std::vector<double> p1 = {A(i), B(i)};
         examples.push_back(p1);
     }
     
-    A = randi<vec>(numOfSamples/2, distr_param(0, 100));
-    B = randi<vec>(numOfSamples/2, distr_param(0, 200));
+    A = arma::randi<arma::vec>(numOfSamples/2, arma::distr_param(0, 100));
+    B = arma::randi<arma::vec>(numOfSamples/2, arma::distr_param(0, 200));
     
     for (size_t i = 0; i < B.size(); ++i) {
         std::vector<double> p1 = {A(i), B(i)};
@@ -71,14 +61,13 @@ void testClassificationPairs() {
     Learning learning;
     
     for (auto c : C) {
-        learning.SGD(
-            examples, pairs_of_indices, tags, descrete_points, indices_of_groups, 
-            id_pair, if_equal_dist_zero, if_non_equal_dist_non_zero, 
-            NON_EQUAL_EPSILON, symmetry, Wreg, c, W, thold);
+        learning(examples, pairs_of_indices, tags, descrete_points, indices_of_groups, 
+                 id_pair, if_equal_dist_zero, if_non_equal_dist_non_zero, NON_EQUAL_EPSILON, 
+                 symmetry, Wreg, c, W, thold);
         
         for (size_t i = 0; i < pairs_of_indices.size(); i++) {
             std::vector<Pair> vol = id_pair( examples[ pairs_of_indices[i][0] ], examples[ pairs_of_indices[i][1] ] );
-            short s = learning.classification(W, vol, thold);
+            short s = learning.classify(W, vol, thold);
             if(s != tags[i]) numOfErrors++;
         }
         

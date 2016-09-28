@@ -10,7 +10,7 @@
 #endif
 
 
-class IDpair : ID {
+class IDpair : public ID {
 
 #ifdef ID_GOOGLE_TEST
     FRIEND_TEST(TestIDpair, ctor);

@@ -1,20 +1,15 @@
 #ifndef _UTILS
 #define _UTILS
 
-#include <iostream>
-#include <math.h>
-#include "armadillo"
-using namespace arma;
-typedef std::vector<double> stdvec;
-typedef std::vector< std::vector<double> > stdvecvec;
+#include <armadillo>
 
 class Utils{
 public:
     
     //get filename return matrix of data
-    mat load_file_to_matrix(const std::string& filename){
-        mat data;
-        data.load(filename,csv_ascii);
+    arma::mat load_file_to_matrix(const std::string& filename){
+        arma::mat data;
+        data.load(filename,arma::csv_ascii);
         return data;
     }
 
@@ -87,14 +82,14 @@ public:
     get matrix of data and number of chunks
     return matrix of discrit point for each dim.
     */
-    mat find_discrit_points(const mat & data, const size_t & number_of_chunks){
-        mat disc_point(number_of_chunks, data.n_cols, fill::zeros);
+    arma::mat find_discrit_points(const arma::mat & data, const size_t & number_of_chunks){
+        arma::mat disc_point(number_of_chunks, data.n_cols, arma::fill::zeros);
         //-1 becuase for to get K parts we need to do K-1 "Cuts"
         int chunk_size = data.n_rows/(number_of_chunks-1); 
 
         for (size_t i = 0; i < data.n_cols; ++i) {
             //extract vector and sort it.
-            vec z = sort(data.col(i));
+            arma::vec z = sort(data.col(i));
             //ignore last step .
             for (size_t j = 0; j < number_of_chunks-1; ++j) 
                 disc_point.col(i)[j]= z[j*chunk_size];
