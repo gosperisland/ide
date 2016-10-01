@@ -23,7 +23,7 @@ class IDgroupsBase {
     protected:
         /** vector of indices of groups */
         std::vector<std::vector<size_t> > _indices_of_groups;
-    	/** Vector pairs contans weights of vertices and indices of each weight in embedded vector */
+    	/** vector pairs contains weights of vertices and indices of each weight in embedded vector */
         mutable std::vector<Pair> _embedded_vector_groups;
         /** vector of number of vertices for each group */
         std::vector<size_t> _number_of_vertices_of_groups;

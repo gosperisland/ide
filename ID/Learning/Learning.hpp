@@ -86,6 +86,7 @@ void operator()(
 		_NON_EQUAL_EPSILON = NON_EQUAL_EPSILON;
 		_symmetry = symmetry;
         
+        std::cout << "before operator()" << std::endl;
         const size_t NUMBER_OF_ITERATIONS = EPOCH_TIMES * (examples.size());
         for (size_t j = 0; j < NUMBER_OF_ITERATIONS; ++j) {
             std::vector<size_t> random_indexes(pairs_of_indices.size()) ;
@@ -100,6 +101,7 @@ void operator()(
                 SGD_similar(id_pair, W, Wreg, first_exam, second_exam, labels[random_index], C, i + 1, thold);
             }
         }
+        std::cout << "after operator()" << std::endl;
     }
     
 
@@ -157,6 +159,8 @@ private:
             double grad_mult_stepsize = (1.0/(double)step) * ((W_old[i] - Wreg[i]));
             update_W(W, i, grad_mult_stepsize);
         }
+        std::cout << "after SGD_similar()" << std::endl;
+
     }
 };
 

@@ -1,3 +1,21 @@
+***************************** TODO ***************************** 
+
+6. You need to create IDgroupsPair so that you'll be able to embed two points with it.
+You need to use GridsOfGroups for it.
+
+9. symmetry: IDgroupsPair should be symmetric 
+(You need to change Alex code so that IDgroupsPair will get an input if it is symmteric or not).
+
+11. Add a private function that computes the whole loss.
+
+12. Add google test for SGD_ID_pairs_similarity
+
+**************************************************************** 
+
+
+
+
+
 
 1. Put your code in Learning folder and Alexey code:
 http://www.ariel.ac.il/sites/ofirpele/ID/ID-1.zip
@@ -10,20 +28,10 @@ Make everything else there static and private except classifcation which you sho
 
 4. Don't use variables such as W_size. Just use W.size() isntead
 
-5. I removed the tags, just use labels which are -1 for similar and +1 for similar for now.
-
-6. You need to create and IDgroupsPair so that you'll be able to embed two points with it.
-You need to use GridsOfGroups for it.
+5. I removed the tags, just use labels which are -1 for similar and +1 for Unsimilar for now.
 
 7. if_equal_dist_zero: if the samples are exactly the same W_reg should be zero and W should be zero.
 
 8. if_non_equal_dist_non_zero: if samples are not exactly the same W_reg and W should be at least NON_EQUAL_EPSILON,
 
-9. symmetry: IDgroupsPair should be symmetric 
-(You need to change Alex code so that IDgroupsPair will get an input if it is symmteric or not).
-
 10. Where is find_discrete_points?
-
-11. Add a private function that computes the whole loss.
-
-12. Add google test for SGD_ID_pairs_similarity

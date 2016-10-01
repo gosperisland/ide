@@ -1,7 +1,7 @@
 #ifndef _UTILS
 #define _UTILS
 
-#include <armadillo>
+#include "armadillo"
 
 class Utils{
 public:

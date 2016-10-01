@@ -79,7 +79,7 @@ void dividePrecetage(
             training_tags[j++] = tags[indecies[i]];
     	}
 
-        learn.print2dvector(pairs);     ////////////////////
+        /*learn.print2dvector(pairs);     ////////////////////
         learn.printvec(indecies);       ////////////////////
         learn.print2dvector(mat);       ////////////////////
         learn.printvec(tags);           ////////////////////
@@ -87,7 +87,7 @@ void dividePrecetage(
         learn.printvec(testing_tags);   ////////////////////
         learn.print2dvector(training);  ////////////////////
         learn.printvec(training_tags);  ////////////////////
-        
+        */
 	}
 };
 #endif
