@@ -68,6 +68,7 @@ void operator()(
 		std::vector<double>& W,
 		double& thold){
 		
+        srand(time(NULL));  
         assert((examples.size() > 0) &&
         "Number of samples should be greater than zero");
         assert((examples[0].size() > 0) &&
@@ -77,6 +78,10 @@ void operator()(
         assert((Wreg.size() == W.size()) &&
         "Wreg size should be equal to W size");
 
+        std::cout.setstate(std::ios_base::failbit);                                             //// discard any output
+        std::cout << discrete_points_for_all_dims.size() << indices_of_groups.size() << std::endl;
+        std::cout.clear();                                                                      /////// get Output
+        
 		/* TODO
 		//GridsOfGroups(const std::vector<std::vector<double> >& discrete_points_for_all_dims, const std::vector<std::vector<size_t> >& indices_of_groups) 
 		//IDgroupsPair(const GridsOfGroups& grids_of_groups, const std::vector<std::vector<size_t> >& indices_of_groups) */
@@ -86,22 +91,22 @@ void operator()(
 		_NON_EQUAL_EPSILON = NON_EQUAL_EPSILON;
 		_symmetry = symmetry;
         
-        std::cout << "before operator()" << std::endl;
         const size_t NUMBER_OF_ITERATIONS = EPOCH_TIMES * (examples.size());
         for (size_t j = 0; j < NUMBER_OF_ITERATIONS; ++j) {
-            std::vector<size_t> random_indexes(pairs_of_indices.size()) ;
+            /*std::vector<size_t> random_indexes(pairs_of_indices.size()) ;
             std::iota (std::begin(random_indexes), std::end(random_indexes), 0);
-            std::random_shuffle ( random_indexes.begin(), random_indexes.end() );
+            std::random_shuffle ( random_indexes.begin(), random_indexes.end() );*/
+            // size_t random_index = 0 + rand() % pairs_of_indices.size();
 
             for (size_t i = 0; i < pairs_of_indices.size(); i++) {
-                size_t random_index = random_indexes.back();
-                random_indexes.pop_back();
+                /*size_t random_index = random_indexes.back();
+                random_indexes.pop_back();*/
+                size_t random_index = std::rand() % pairs_of_indices.size();
                 std::vector<double> first_exam = examples[ pairs_of_indices[random_index][0] ];
                 std::vector<double> second_exam = examples[ pairs_of_indices[random_index][1] ];
                 SGD_similar(id_pair, W, Wreg, first_exam, second_exam, labels[random_index], C, i + 1, thold);
             }
         }
-        std::cout << "after operator()" << std::endl;
     }
     
 
@@ -159,8 +164,6 @@ private:
             double grad_mult_stepsize = (1.0/(double)step) * ((W_old[i] - Wreg[i]));
             update_W(W, i, grad_mult_stepsize);
         }
-        std::cout << "after SGD_similar()" << std::endl;
-
     }
 };
 

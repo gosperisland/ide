@@ -6,7 +6,7 @@ double code_to_time(){
     Learning learn;
 
     //read original data to matrix
-    arma::mat data = utils.load_file_to_matrix("/home/ubuntu/workspace/New/Learning_Tests_FIX/colors_v1.csv");
+    arma::mat data = utils.loadFileToMatrix("/home/ubuntu/workspace/New/Learning_Tests_FIX/colors_v1.csv");
     
     arma::mat x1(data.n_rows, 3);
     arma::mat x2(data.n_rows, 3);
@@ -33,7 +33,7 @@ double code_to_time(){
     }std::cout << "\n\n" << std::endl;
   */  
     //find discrit points
-    arma::mat dis_points = utils.find_discrit_points(data_for_disc,5);
+    arma::mat dis_points = utils.findDiscretePoints(data_for_disc,5);
     
 /*    for(uword row=0; row < dis_points.n_rows; ++row){
         for(uword col=0; col < dis_points.n_cols; ++col){
@@ -42,7 +42,7 @@ double code_to_time(){
     }*/
     
     //generate pairs
-    std::vector< std::vector<size_t> > pairs = utils.create_combination_2(data.n_rows);
+    std::vector< std::vector<size_t> > pairs = utils.createPairCombinations(data.n_rows);
     learn.print2dvector(pairs);
     
     size_t counter_minus = 0;
@@ -70,9 +70,9 @@ double code_to_time(){
     std::vector<double> C = reg.c_vec_intialization();
     
     //get matrix sorted by rows [3][5]
-    std::vector< std::vector<double> > dis_points2 = utils.mat_to_std_vec_2(dis_points);
+    std::vector< std::vector<double> > dis_points2 = utils.matToVecByColumns(dis_points);
     
-    std::vector< std::vector<double> > examples = utils.mat_to_std_vec(data_for_disc);
+    std::vector< std::vector<double> > examples = utils.matToVecByRows(data_for_disc);
 
     //learn.print2dvector(examples);      /////////////////////////
     //learn.printvec(tags);               /////////////////////////

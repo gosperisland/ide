@@ -15,7 +15,31 @@ You need to use GridsOfGroups for it.
 
 
 
+***************************** ask Ofir *************************
 
+Utils.hpp ->	* transposeMatToVec() - did you ask for it? 
+				* nextCombination() - not in use, can i delete it? in use createPairCombinations() instead.
+				* check findDiscretePoints()
+				* can i make "number_of_chunks" a constant field of Utils class?
+Learning.hpp->	* which is better std::rand()?
+
+
+**************************************************************** 
+
+
+
+
+
+
+add flag for multi-core machines when OpenMP is enabled in your compiler -fopenmp
+
+
+
+
+
+
+
+***************************** Done ***************************** 
 
 1. Put your code in Learning folder and Alexey code:
 http://www.ariel.ac.il/sites/ofirpele/ID/ID-1.zip
@@ -35,3 +59,5 @@ Make everything else there static and private except classifcation which you sho
 8. if_non_equal_dist_non_zero: if samples are not exactly the same W_reg and W should be at least NON_EQUAL_EPSILON,
 
 10. Where is find_discrete_points?
+
+**************************************************************** 
