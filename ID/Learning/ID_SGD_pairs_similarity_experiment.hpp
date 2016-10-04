@@ -177,12 +177,12 @@ double find_best_C(
 	std::vector<short> testing_tags;
 	
 
-    const size_t ITERATION = 5;
+    const size_t ITERATION = 10;
     size_t numOfErrors = 0;
     std::vector<double> avgErr(C.size(), 0);
     
-    std::cout << "before W: " << std::endl;
-    learn.printvec(W);
+    /*std::cout << "before W: " << std::endl;
+    learn.printvec(W);*/
         
     for (size_t i = 0; i < C.size(); i++) {
         std::vector<size_t> error_vec(ITERATION, 0);
@@ -214,8 +214,8 @@ double find_best_C(
             
         }
         
-        std::cout << "W: " << std::endl;
-        learn.printvec(W);
+        /*std::cout << "W: " << std::endl;
+        learn.printvec(W);*/
         avgErr[i] = std::accumulate(error_vec.begin(), error_vec.end(), 0); //sum error_vec values
         avgErr[i] /= ITERATION;
         std::cout << "avgErr[" << i << "]: " << avgErr[i] << "\n\n" << std::endl;
@@ -233,7 +233,7 @@ double find_best_C(
             id_pair, if_equal_dist_zero, if_non_equal_dist_non_zero, 
             NON_EQUAL_EPSILON, symmetry, Wreg, best_C, W, thold);
                
-	learn.printvec(W);
+// 	learn.printvec(W);
 	
 	return best_C;
 }

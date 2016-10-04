@@ -6,8 +6,6 @@ You need to use GridsOfGroups for it.
 9. symmetry: IDgroupsPair should be symmetric 
 (You need to change Alex code so that IDgroupsPair will get an input if it is symmteric or not).
 
-11. Add a private function that computes the whole loss.
-
 12. Add google test for SGD_ID_pairs_similarity
 
 **************************************************************** 
@@ -22,7 +20,11 @@ Utils.hpp ->	* transposeMatToVec() - did you ask for it?
 				* check findDiscretePoints()
 				* can i make "number_of_chunks" a constant field of Utils class?
 Learning.hpp->	* which is better std::rand()?
+				* check_input() 
+					"if the samples are exactly the same W_reg should be zero and W should be zero"
+					is it ok that W equal epsilon instead?
 
+"11. Add a private function that computes the whole loss."
 
 **************************************************************** 
 

@@ -36,7 +36,7 @@ public:
         for (size_t j = x2.n_rows; j < 2*(x2.n_rows); ++j) 
             examples.row(j) = x2.row(j-x2.n_rows);
             
-        arma::mat _discrete_points = findDiscretePoints(examples, 2);
+        arma::mat _discrete_points = findDiscretePoints(examples, 3);
         _discrete_points_for_all_dims = matToVecByColumns(_discrete_points);
         _examples = matToVecByRows(examples);
     }

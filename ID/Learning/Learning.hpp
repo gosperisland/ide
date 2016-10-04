@@ -14,7 +14,7 @@ public:
     Learning() {}
     
     template <typename T>
-    void printvec(const std::vector<T>& v){
+    static void printvec(const std::vector<T>& v){
         for (auto i : v) {
             std::cout << i << " ";
         }std::cout << "\n" << std::endl;
@@ -93,20 +93,27 @@ void operator()(
         
         const size_t NUMBER_OF_ITERATIONS = EPOCH_TIMES * (examples.size());
         for (size_t j = 0; j < NUMBER_OF_ITERATIONS; ++j) {
-            /*std::vector<size_t> random_indexes(pairs_of_indices.size()) ;
+            std::vector<size_t> random_indexes(pairs_of_indices.size()) ;
             std::iota (std::begin(random_indexes), std::end(random_indexes), 0);
-            std::random_shuffle ( random_indexes.begin(), random_indexes.end() );*/
+            std::random_shuffle ( random_indexes.begin(), random_indexes.end() );
             // size_t random_index = 0 + rand() % pairs_of_indices.size();
 
             for (size_t i = 0; i < pairs_of_indices.size(); i++) {
-                /*size_t random_index = random_indexes.back();
-                random_indexes.pop_back();*/
-                size_t random_index = std::rand() % pairs_of_indices.size();
+                size_t random_index = random_indexes.back();
+                random_indexes.pop_back();
+                //size_t random_index = std::rand() % pairs_of_indices.size();
                 std::vector<double> first_exam = examples[ pairs_of_indices[random_index][0] ];
                 std::vector<double> second_exam = examples[ pairs_of_indices[random_index][1] ];
                 SGD_similar(id_pair, W, Wreg, first_exam, second_exam, labels[random_index], C, i + 1, thold);
             }
+            /*size_t a;
+            std::cout << "**************" << std::endl;
+            std::cin >> a;*/
         }
+        /*std::cout << "W:\n";
+        printvec(W);
+        std::cout << "Wreg:\n";
+        printvec(Wreg);*/
     }
     
 
@@ -125,25 +132,29 @@ private:
      *  TODO:: check if these fields: _if_equal_dist_zero, _if_non_equal_dist_non_zero need to be changed here
      */
     static bool check_input( const std::vector<double>& first_exam, const std::vector<double>& second_exam, const short tag){
-            assert((first_exam != second_exam || tag == 1) && "check_input()");
-            return first_exam == second_exam;
+        /*std::cout << "first_exam: ";
+        printvec(first_exam);
+        std::cout << "second_exam: ";
+        printvec(second_exam);*/
+        _if_equal_dist_zero = first_exam==second_exam;
+        _if_non_equal_dist_non_zero = !_if_equal_dist_zero;
+        // std::cout << "first==second: " << _if_equal_dist_zero << " , tag: " << tag << "\n\n" << std::endl;
+        assert((_if_non_equal_dist_non_zero || tag == -1) 
+        && "The samples are exactly the same tag should be \"-1\" for Similar objects, check_input()");
+        return _if_equal_dist_zero;
     }
-        
-    static void SGD_similar(
+    
+    static void loss(
         IDpair& id_pair,
-        std::vector<double>& W,
-        const std::vector<double>& Wreg, 
         const std::vector<double>& first_exam,  
         const std::vector<double>& second_exam, 
+        std::vector<double>& W,
+        double& thold,
         const short tag, 
         const double C, 
-        const size_t step,
-        double& thold){
-        
-        if(check_input(first_exam, second_exam, tag)) return;
-        
+        const size_t step){
+            
         const std::vector<Pair>& embedded_vec = id_pair(first_exam, second_exam);
-        std::vector<double> W_old(W);   
         double dotProd = 0;
 
         //ID(X_pi_1, X_pi_2) * W
@@ -159,7 +170,54 @@ private:
             thold -= ( (1.0 / (double)step) * (C * tag) );
             thold = thold < 1 ? 1 : thold;
         }
+    }
+        
+    static void SGD_similar(
+        IDpair& id_pair,
+        std::vector<double>& W,
+        const std::vector<double>& Wreg, 
+        const std::vector<double>& first_exam,  
+        const std::vector<double>& second_exam, 
+        const short tag, 
+        const double C, 
+        const size_t step,
+        double& thold){
+        
+        if(check_input(first_exam, second_exam, tag)){
+            // bool a;
+            
+            const std::vector<Pair>& embedded_vec = id_pair(first_exam, second_exam);
+            for (auto simplex_point : embedded_vec) {
+            //   std::cout << "index: " << simplex_point._index << " , weight: " << simplex_point._weight << " , W[index]:" << W[simplex_point._index] << std::endl;
+              W[simplex_point._index] = 0;
+            }
 
+            /*std::cout << "W:\n";
+            printvec(W);
+            std::cout << "Wreg:\n";
+            printvec(Wreg);
+            std::cin >> a;*/
+            return;  
+        } 
+
+        std::vector<double> W_old(W);   
+        loss(id_pair, first_exam, second_exam, W, thold, tag, C, step);
+/*        const std::vector<Pair>& embedded_vec = id_pair(first_exam, second_exam);
+        double dotProd = 0;
+
+        //ID(X_pi_1, X_pi_2) * W
+        for (size_t i = 0; i < embedded_vec.size(); i++)
+            dotProd += embedded_vec[i]._weight * W[ embedded_vec[i]._index ];
+
+        // 1 - { (ID(X_pi_1, X_pi_2) * W) - threshold } * y_i
+        if(  ( 1 - ( (dotProd - thold) * tag) ) > 0 ) {
+            for (auto& simplex_point : embedded_vec) {
+                double grad_mult_stepsize = -(1.0/(double)step) *  (C * tag * simplex_point._weight);
+                update_W(W, simplex_point._index, grad_mult_stepsize);
+            }
+            thold -= ( (1.0 / (double)step) * (C * tag) );
+            thold = thold < 1 ? 1 : thold;
+        }*/
         for (size_t i = 0; i < W.size(); i++){
             double grad_mult_stepsize = (1.0/(double)step) * ((W_old[i] - Wreg[i]));
             update_W(W, i, grad_mult_stepsize);

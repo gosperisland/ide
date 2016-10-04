@@ -89,12 +89,15 @@ int main(){
     // std::cout.clear();          /////// get Output
 
     
+    std::cout << "W:\n";
+    learn.printvec(W);          ///////////////////////////
+    std::cout << "Wreg:\n";
+    learn.printvec(Wreg);
+    
     std::cout << "Best C: " << c << std::endl; 
     std::cout << "amount of errors: " << numOfErrors << " out of " << testing_tags.size() <<  " tests" << std::endl;
     std::cout << "Success rate: " << (1 - (double)numOfErrors/testing_tags.size()) * 100 << "%" << std::endl; 
     std::cout << "thold: " << thold << "\n\n" << std::endl;
-    
-    // learn.printvec(W);          ///////////////////////////
     
     
     clock_t end = clock();
