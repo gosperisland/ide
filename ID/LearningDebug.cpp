@@ -174,8 +174,8 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 }
 
 void sanityTest1Dim() {
-	bool justFromGrid = true; //taking samples from the grid itself
-	const size_t numOfSamples = 5000;
+	bool justFromGrid = false; //taking samples from the grid itself
+	const size_t numOfSamples = 5000000;
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 	//std::vector<double> gridForX1 = {0, 100};
