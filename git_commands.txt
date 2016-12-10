@@ -1,0 +1,29 @@
+git commit
+echo "# example" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/.../ID.git
+git push -u origin master
+
+
+https://github.com/{username}/{projectname}/archive/{sha}.zip
+
+git commit -a
+
+
+ 
+cp IDpair.hpp Pair.hpp ID.hpp Grid.hpp ../id
+
+git clone https://github.com/IDEmbedder/IDembedder id
+
+
+
+
+
+
+
+
+
+
+
