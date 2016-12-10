@@ -67,6 +67,10 @@ class IDpair : public ID {
                 _discrete_points_for_all_dims.double_grid();
                 _embedded_vector.resize(_num_of_dims() + 1);
             }
+        size_t get_total_num_of_vertices() const
+        {
+                	return _discrete_points_for_all_dims.get_num_of_vertices();
+        }
         
         /**
         * Operator () calculate a distence between two objects in space
