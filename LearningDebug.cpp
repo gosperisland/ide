@@ -150,7 +150,6 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 	std::vector<double> Wreg;
 	std::vector<double> W;
 
-	// cout << "create grid_pair" << endl;
 	Grid grid_pair(discrete_points);
 
 	IDpair id_pair(grid_pair);
