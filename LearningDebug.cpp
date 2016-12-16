@@ -6,7 +6,7 @@
 #include <exception>
 #include <time.h>
 #include "armadillo"
-#include "IDpair.hpp"
+#include "./ID/IDpair.hpp"
 //#include "Learning.hpp"
 //#include "GridGroup.hpp"
 #include <ctime>
@@ -74,6 +74,7 @@ void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 	size_t sparse_size = volume.size();
 	double dotProd = 0;
 
+
 	//ID(X_pi_1, X_pi_2) * W
 	for (size_t i = 0; i < sparse_size; i++)
 		dotProd += volume[i]._weight * W[volume[i]._index];
@@ -96,7 +97,7 @@ void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 		W[i] = W[i] < 0 ? 0 : W[i];
 
 	}
-	//cout<<"debug W"<<W<<endl;
+
 }
 
 std::vector<double> learn_similar(
@@ -106,15 +107,17 @@ std::vector<double> learn_similar(
 		const double C, double& thold) {
 
 	assert(tags.size() == indecies_of_pairs.size());
-
+	cout<<"learnsimilar"<<endl;
 	size_t W_size = idpair.get_total_num_of_vertices();
+	cout<<Wreg.size()<<","<< W_size;
 
 	std::vector<double> W(Wreg.size(), 0);
+
 	assert(Wreg.size() == W_size);
 
 	size_t num_of_pairs = indecies_of_pairs.size();
 
-	bool isRandomInd = true;
+	bool isRandomInd = false;
 	for (int j = 0; j < EPOCH_TIMES; ++j) {
 
 		std::vector<int> random_indexes(num_of_pairs);
@@ -128,6 +131,8 @@ std::vector<double> learn_similar(
 			size_t random_index = isRandomInd ? random_indexes.back() : i;
 
 			random_indexes.pop_back();
+			//cout<<random_index<<","<<examples[indecies_of_pairs[random_index][0]][0]<<endl;
+
 
 			const std::vector<Pair>& volume = idpair(
 					examples[indecies_of_pairs[random_index][0]],
@@ -174,7 +179,7 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 }
 
 void sanityTest1Dim() {
-	bool justFromGrid = false; //taking samples from the grid itself
+	bool justFromGrid = true; //taking samples from the grid itself
 	const size_t numOfSamples = 5000000;
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
@@ -248,10 +253,18 @@ void sanityTest1Dim() {
 	tstart = time(0);
 	size_t numOfErrors = 0;
 
+#ifdef DOUBLE_OUTSIDE
+	gridpair.insert(gridpair.end(), discrete_points.begin(), discrete_points.end());
+#endif
+
+
 	//cout<<"debug grid"<<grid<<endl;
 	//grid.get_vertex(i,v);
 	std::vector<double> W = init(examples, indecies_of_pairs, tags, gridpair, 2,
 			tholdArg);
+
+
+
 	Grid grid(gridpair);
 	IDpair id_pair(grid);// is not being used as an input to SGD-init but created inside
 
