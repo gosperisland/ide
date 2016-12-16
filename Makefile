@@ -9,7 +9,7 @@ main:
 LearningDebug: LearningDebug.o	
 	g++ -Wall -g -pg -std=c++11  LearningDebug.o -o LearningDebug -larmadillo 
 
-LearningDebug.o: LearningDebug.cpp  ID/IDpair.hpp ID/ID.hpp ID/Grid.hpp ID/Pair.hpp
+LearningDebug.o: LearningDebug.cpp  ID/IDpair.hpp ID/ID.hpp ID/Grid.hpp ID/Pair.hpp ID01/IDpair.hpp ID01/ID.hpp ID01/Grid.hpp ID01/Pair.hpp
 	g++  -Wall -g -pg -std=c++11  -c  LearningDebug.cpp
 	
 

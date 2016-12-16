@@ -6,7 +6,7 @@
 #include <exception>
 #include <time.h>
 #include "armadillo"
-#include "./ID/IDpair.hpp"
+#include "./ID01/IDpair.hpp"
 //#include "Learning.hpp"
 //#include "GridGroup.hpp"
 #include <ctime>
@@ -107,9 +107,9 @@ std::vector<double> learn_similar(
 		const double C, double& thold) {
 
 	assert(tags.size() == indecies_of_pairs.size());
-	cout<<"learnsimilar"<<endl;
+
 	size_t W_size = idpair.get_total_num_of_vertices();
-	cout<<Wreg.size()<<","<< W_size;
+	//cout<<Wreg.size()<<","<< W_size;
 
 	std::vector<double> W(Wreg.size(), 0);
 
@@ -117,7 +117,7 @@ std::vector<double> learn_similar(
 
 	size_t num_of_pairs = indecies_of_pairs.size();
 
-	bool isRandomInd = false;
+	bool isRandomInd = true;
 	for (int j = 0; j < EPOCH_TIMES; ++j) {
 
 		std::vector<int> random_indexes(num_of_pairs);
@@ -126,13 +126,10 @@ std::vector<double> learn_similar(
 
 		for (size_t i = 0; i < num_of_pairs / prunePairsFactor; i++) {
 
-
 			//get random index
 			size_t random_index = isRandomInd ? random_indexes.back() : i;
 
 			random_indexes.pop_back();
-			//cout<<random_index<<","<<examples[indecies_of_pairs[random_index][0]][0]<<endl;
-
 
 			const std::vector<Pair>& volume = idpair(
 					examples[indecies_of_pairs[random_index][0]],
@@ -179,7 +176,7 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 }
 
 void sanityTest1Dim() {
-	bool justFromGrid = true; //taking samples from the grid itself
+	bool justFromGrid = false; //taking samples from the grid itself
 	const size_t numOfSamples = 5000000;
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
@@ -247,8 +244,6 @@ void sanityTest1Dim() {
 				discrete_points.end());
 */
 
-
-
 	time_t tstart, tend;
 	tstart = time(0);
 	size_t numOfErrors = 0;
@@ -257,35 +252,26 @@ void sanityTest1Dim() {
 	gridpair.insert(gridpair.end(), discrete_points.begin(), discrete_points.end());
 #endif
 
-
-	//cout<<"debug grid"<<grid<<endl;
-	//grid.get_vertex(i,v);
 	std::vector<double> W = init(examples, indecies_of_pairs, tags, gridpair, 2,
 			tholdArg);
 
-
-
 	Grid grid(gridpair);
 	IDpair id_pair(grid);// is not being used as an input to SGD-init but created inside
-
 
 	cout << "need imposeSymmetry(W) now!!!!!!!!"<<endl;
 
 	//gridpar vector include discrete_points twice, one for each hyper-axis, i.e., X and Y
 
-
 	// std::vector<double> Wreg = l.construct_Wreg(grid);
 
-	//cout<<"_____________debug examples1"<<examples[ indecies_of_pairs[1][0] ]<<endl;
 	for (size_t i = 0; i < indecies_of_pairs.size(); i++) {
 		vector<double> examp0 = examples[indecies_of_pairs[i][0]];
 		vector<double> examp1 = examples[indecies_of_pairs[i][1]];
-		//cout<<examp0<<endl;
-		//cout<<examp1<<endl;
+
 		std::vector<Pair> vol = id_pair(examp0, examp1);
-		//cout<<"debug vol"<<vol<<endl;
+
 		short s = classification(W, vol, tholdArg);
-		//cout<< s << " , "  << tags[i] << endl;
+
 		if (s != tags[i])
 			numOfErrors++;
 	}
@@ -295,6 +281,8 @@ void sanityTest1Dim() {
 	//cout << "thold: " << thold << ".\n" << endl;
 	cout << "It took " << difftime(tend, tstart) << " second(s)." << endl;
 }
+
+
 
 int main() {
 	sanityTest1Dim();
