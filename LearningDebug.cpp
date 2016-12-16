@@ -6,7 +6,7 @@
 #include <exception>
 #include <time.h>
 #include "armadillo"
-#include "./ID01/IDpair.hpp"
+#include "./ID/IDpair.hpp"
 //#include "Learning.hpp"
 //#include "GridGroup.hpp"
 #include <ctime>
@@ -82,7 +82,7 @@ void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 	// 1 - { (ID(X_pi_1, X_pi_2) * W) - threshold } * y_i
 	if ((1 - ((dotProd - thold) * tag)) > 0) {
 		for (auto& simplex_point : volume) {
-			//cout<<"debug simplex point"<<simplex_point._index/11<<","<<simplex_point._index%11<<endl;
+
 			W[simplex_point._index] += (1.0 / (double) etha)
 					* (C * tag * simplex_point._weight);
 			W[simplex_point._index] =
@@ -139,17 +139,7 @@ std::vector<double> learn_similar(
 		}
 
 	}
-
-	cout << "W.size(): " << W.size() << " \nW:" << endl;
-	for (size_t i = 0; i < W.size(); i++) {
-		cout << W[i] << " , ";
-		if ((i + 1) % (int) sqrt(W.size()) == 0) {
-			cout << endl;
-		}
-	}
-	//cout << W << endl;
-
-	return Wreg;
+	return W;
 }
 
 std::vector<double> init(const std::vector<std::vector<double> >& examples,
@@ -159,8 +149,6 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 		const double C, double& thold) {
 	std::vector<double> Wreg;
 	std::vector<double> W;
-
-	cout << "discrete_points.size(): " << discrete_points.size() << endl;
 
 	// cout << "create grid_pair" << endl;
 	Grid grid_pair(discrete_points);
@@ -176,7 +164,7 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 }
 
 void sanityTest1Dim() {
-	bool justFromGrid = false; //taking samples from the grid itself
+	bool justFromGrid = true; //taking samples from the grid itself
 	const size_t numOfSamples = 5000000;
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
@@ -206,10 +194,7 @@ void sanityTest1Dim() {
 
 			for (size_t j = 0; j < A.size(); j++) {
 				vector<double> p1 = { A(j) };
-
 				examples.push_back(p1);
-
-				//cout<<"debug p1"<<p1<<endl;
 
 			}
 		}
@@ -222,20 +207,19 @@ void sanityTest1Dim() {
 	// generate tags.
 	int counter = 0;
 	for (size_t i = 0; i < indecies_of_pairs.size(); i++) {
-		//cout<<"debug"<<indecies_of_pairs[i][0]<<","<<indecies_of_pairs[i][1]<<endl;
-		//cout<< "examples[" << i << "]: " << examples[indecies_of_pairs[i][0]][0] << " examples[" << i << "]: " << examples[indecies_of_pairs[i][1]][0] << " ";
+
 		double dist = L1DistanceScalar(examples[indecies_of_pairs[i][0]][0],
 				examples[indecies_of_pairs[i][1]][0]);
 		thresholdValue = 20;
 		tags[i] = dist < thresholdValue ? -1 : 1;
-		//cout<< "tag: " << tags[i] << endl;
+
 		if (tags[i] < 0)
 			counter++;
 	}
 
-	//cout<<"debug tags"<<tags<<endl;
+
 	cout << "num of good examples: " << counter << " out of: "
-			<< numOfSamples / 2 << " examples" << endl;
+			<< indecies_of_pairs.size() << " examples" << endl;
 
 	double tholdArg = thresholdValue;		//argument for init, might not be changed at all in the case of threshold regularization
 
@@ -254,7 +238,16 @@ void sanityTest1Dim() {
 
 	std::vector<double> W = init(examples, indecies_of_pairs, tags, gridpair, 2,
 			tholdArg);
-
+	bool printW = true;
+	if (printW){
+		cout << "W.size(): " << W.size() << " \nW:" << endl;
+		for (size_t i = 0; i < W.size(); i++) {
+			cout << W[i] << " , ";
+			if ((i + 1) % (int) sqrt(W.size()) == 0) {
+				cout << endl;
+			}
+		}
+	}
 	Grid grid(gridpair);
 	IDpair id_pair(grid);// is not being used as an input to SGD-init but created inside
 
