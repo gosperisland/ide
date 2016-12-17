@@ -251,7 +251,7 @@ void sanityTest1Dim() {
 	}
 
 
-	cout << "Number of goodexamples: " << counter << " out of: "
+	cout << "Number of good examples: " << counter << " out of: "
 			<< indices_of_pairs.size() << " examples" << endl;
 
 	double tholdArg = thresholdValue;		//argument for init, might not be changed at all in the case of threshold regularization
