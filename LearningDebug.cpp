@@ -196,8 +196,9 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 }
 
 void sanityTest1Dim() {
-	bool justFromGrid = true; //taking samples from the grid itself
-	const size_t numOfSamples = 5000000;
+	bool justFromGrid = false; //taking samples from the grid itself
+	//const size_t numOfSamples = 5000000; //5M ~217sec
+	const size_t numOfSamples = 500000; //500k ~22sec
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 	//std::vector<double> gridForX1 = {0, 100};
@@ -250,7 +251,7 @@ void sanityTest1Dim() {
 	}
 
 
-	cout << "num of good examples: " << counter << " out of: "
+	cout << "Number of goodexamples: " << counter << " out of: "
 			<< indices_of_pairs.size() << " examples" << endl;
 
 	double tholdArg = thresholdValue;		//argument for init, might not be changed at all in the case of threshold regularization
@@ -305,8 +306,8 @@ void sanityTest1Dim() {
 			numOfErrors++;
 	}
 	tend = time(0);
-	cout << "num of errors: " << numOfErrors << endl;
-	cout << "error percent: " << (double) numOfErrors / tags.size() << endl;
+	cout << "Number of errors: " << numOfErrors << endl;
+	cout << "Error rate: " << (double) numOfErrors / tags.size() << endl;
 	//cout << "thold: " << thold << ".\n" << endl;
 	cout << "It took " << difftime(tend, tstart) << " second(s)." << endl;
 }
