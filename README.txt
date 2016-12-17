@@ -41,4 +41,4 @@ In a linux shell:
 
 Licensing conditions
 --------------------
-See the file ID/LICENSE.txt for conditions of use.
+See the file LICENSE.txt for conditions of use.
