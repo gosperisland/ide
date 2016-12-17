@@ -28,13 +28,13 @@ Pele et al. plan to publish algorithm with embedding on the fly in the future. A
 
 Startup
 ------------
-I currently have LearningDebug as main. it runs a Learning demo of with a one dimensional hyper-axis, learning classification of the thresholding of euclidean/scalar distance. 
+I currently have LearningDebug as main. it runs a Learning demo with a one dimensional hyper-axis, learning classification of the thresholding of euclidean/scalar distance. 
 
 Compiling 
 -----------------
 In a linux shell:
 >> make
->> LearningDebug
+>> ./LearningDebug
 
 
 

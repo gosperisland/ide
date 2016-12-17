@@ -69,8 +69,8 @@ std::vector<double> construct_Wreg(Grid points_pair) {
 }
 
 inline vector<int> indToPair(int arg, int size){
-	int i = arg % size;//line
-	int j = arg / size;//row
+	int i = arg / size;//line
+	int j = arg % size;//row
 	return {i,j};
 }
 
@@ -82,16 +82,16 @@ void makeSymmetric(std::vector<double> & W) {
 	float eps = 0;
 	int n = (int) sqrt(W.size());
 	if (abs(sqrt(W.size()) - n) > eps) {
-		cerr << "makeSymmetric: not square matrix" << endl;
+		cerr << "makeSymmetric: flat vector cannot represent square matrix" << endl;
 		exit(1);
 	}
 	for (size_t ind = 0; ind < W.size(); ind++) {
 		vector<int> v = indToPair(ind,n);
 		int i=v[0];
 		int j=v[1];
-		if (i > j) {
-			cout<<pairToInd(j,i,n)<<endl;
-			W[pairToInd(j,i,n)] = W[ind];
+		if (j > i) {// in the source pair-index
+			cout<<i<<","<<j<<","<<W[ind]<<","<<pairToInd(j,i,n)<<endl;
+			W[pairToInd(j,i,n)] = W[ind];//target pair-index is swapped
 		}
 
 	}
@@ -133,14 +133,14 @@ void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 	}
 
 }
-
+//indices
 std::vector<double> learn_similar(
 		const std::vector<std::vector<double> >& examples, const IDpair& idpair,
-		const std::vector<std::vector<size_t> >& indecies_of_pairs,
+		const std::vector<std::vector<size_t> >& indices_of_pairs,
 		const std::vector<short>& tags, const std::vector<double>& Wreg,
 		const double C, double& thold) {
 
-	assert(tags.size() == indecies_of_pairs.size());
+	assert(tags.size() == indices_of_pairs.size());
 
 	size_t W_size = idpair.get_total_num_of_vertices();
 	//cout<<Wreg.size()<<","<< W_size;
@@ -149,7 +149,7 @@ std::vector<double> learn_similar(
 
 	assert(Wreg.size() == W_size);
 
-	size_t num_of_pairs = indecies_of_pairs.size();
+	size_t num_of_pairs = indices_of_pairs.size();
 
 	bool isRandomInd = true;
 	for (int j = 0; j < EPOCH_TIMES; ++j) {
@@ -166,8 +166,8 @@ std::vector<double> learn_similar(
 			random_indexes.pop_back();
 
 			const std::vector<Pair>& volume = idpair(
-					examples[indecies_of_pairs[random_index][0]],
-					examples[indecies_of_pairs[random_index][1]]);
+					examples[indices_of_pairs[random_index][0]],
+					examples[indices_of_pairs[random_index][1]]);
 
 			SGD_similar(W, Wreg, volume, tags[random_index], thold, C, i + 1);
 		}
@@ -177,7 +177,7 @@ std::vector<double> learn_similar(
 }
 
 std::vector<double> init(const std::vector<std::vector<double> >& examples,
-		const std::vector<std::vector<size_t> >& indecies_of_pairs,
+		const std::vector<std::vector<size_t> >& indices_of_pairs,
 		const std::vector<short>& tags,
 		const std::vector<std::vector<double> >& discrete_points,
 		const double C, double& thold) {
@@ -190,14 +190,14 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 
 	Wreg = construct_Wreg(grid_pair);
 
-	W = learn_similar(examples, id_pair, indecies_of_pairs, tags, Wreg, C,
+	W = learn_similar(examples, id_pair, indices_of_pairs, tags, Wreg, C,
 			thold);
 
 	return W;
 }
 
 void sanityTest1Dim() {
-	bool justFromGrid = false; //taking samples from the grid itself
+	bool justFromGrid = true; //taking samples from the grid itself
 	const size_t numOfSamples = 5000000;
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
@@ -206,7 +206,7 @@ void sanityTest1Dim() {
 	std::vector<std::vector<double> > discrete_points = { gridForX1 };
 	//std::vector<std::vector<double> > discrete_points = {{0,0},{0,200},{100,0},{100,200}};
 	std::vector<std::vector<double> > examples;
-	std::vector<std::vector<size_t> > indecies_of_pairs;
+	std::vector<std::vector<size_t> > indices_of_pairs;
 	//arma_rng::set_seed_random();
 	if (justFromGrid) {
 		for (size_t j = 0; j < gridForX1.size(); j++) {
@@ -215,7 +215,7 @@ void sanityTest1Dim() {
 		for (size_t i = 0; i < gridForX1.size(); i++) {
 			for (size_t j = 0; j < gridForX1.size(); j++) {
 				vector<size_t> p1 = { i, j };
-				indecies_of_pairs.push_back(p1);
+				indices_of_pairs.push_back(p1);
 			}
 		}
 
@@ -233,16 +233,16 @@ void sanityTest1Dim() {
 		}
 		for (size_t i = 0; i < numOfSamples / 2; i++) {
 			vector<size_t> p1 = { i, i + numOfSamples / 2 }; //0000001000,0000001000
-			indecies_of_pairs.push_back(p1);
+			indices_of_pairs.push_back(p1);
 		}
 	}
-	vector<short> tags(indecies_of_pairs.size(), 0);
+	vector<short> tags(indices_of_pairs.size(), 0);
 	// generate tags.
 	int counter = 0;
-	for (size_t i = 0; i < indecies_of_pairs.size(); i++) {
+	for (size_t i = 0; i < indices_of_pairs.size(); i++) {
 
-		double dist = L1DistanceScalar(examples[indecies_of_pairs[i][0]][0],
-				examples[indecies_of_pairs[i][1]][0]);
+		double dist = L1DistanceScalar(examples[indices_of_pairs[i][0]][0],
+				examples[indices_of_pairs[i][1]][0]);
 		thresholdValue = 20;
 		tags[i] = dist < thresholdValue ? -1 : 1;
 
@@ -252,7 +252,7 @@ void sanityTest1Dim() {
 
 
 	cout << "num of good examples: " << counter << " out of: "
-			<< indecies_of_pairs.size() << " examples" << endl;
+			<< indices_of_pairs.size() << " examples" << endl;
 
 	double tholdArg = thresholdValue;		//argument for init, might not be changed at all in the case of threshold regularization
 
@@ -265,12 +265,18 @@ void sanityTest1Dim() {
 	tstart = time(0);
 	size_t numOfErrors = 0;
 
+
+	//////for supporting backward compatibility:
 #ifdef DOUBLE_OUTSIDE
 	gridpair.insert(gridpair.end(), discrete_points.begin(), discrete_points.end());
 #endif
+	///////////////////
 
-	std::vector<double> W = init(examples, indecies_of_pairs, tags, gridpair, 2,
+	std::vector<double> W = init(examples, indices_of_pairs, tags, gridpair, 2,
 			tholdArg);
+
+	makeSymmetric(W);
+
 	bool printW = true;
 	if (printW){
 		cout << "W.size(): " << W.size() << " \nW:" << endl;
@@ -284,15 +290,13 @@ void sanityTest1Dim() {
 	Grid grid(gridpair);
 	IDpair id_pair(grid);// is not being used as an input to SGD-init but created inside
 
-	cout << "need imposeSymmetry(W) now!!!!!!!!"<<endl;
-
 	//gridpar vector include discrete_points twice, one for each hyper-axis, i.e., X and Y
 
 	// std::vector<double> Wreg = l.construct_Wreg(grid);
 
-	for (size_t i = 0; i < indecies_of_pairs.size(); i++) {
-		vector<double> examp0 = examples[indecies_of_pairs[i][0]];
-		vector<double> examp1 = examples[indecies_of_pairs[i][1]];
+	for (size_t i = 0; i < indices_of_pairs.size(); i++) {
+		vector<double> examp0 = examples[indices_of_pairs[i][0]];
+		vector<double> examp1 = examples[indices_of_pairs[i][1]];
 
 		std::vector<Pair> vol = id_pair(examp0, examp1);
 
