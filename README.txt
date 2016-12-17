@@ -1,10 +1,15 @@
 Code for the Interpolated Discretized (ID) Embedding
-----------------------------------------------------
++
+Alpha version of the SVM learning with stochastic subgradient decent.
+
+
+
+Original code was taken from: 
 Ofir Pele, Alexey Kurbatsky
 Contact: ofir.pele@g.ariel.ac.il
-Version: 1, August 2016
 
-This directory contains the source code for computing the Interpolated Discretized (ID) embedding.
+
+contains the source code for computing the Interpolated Discretized (ID) embedding.
 
 Please cite this paper if you use this code:
  Interpolated Discretized Embedding of Single Vectors and Vector Pairs for Classification, Metric Learning and Distance Approximation
@@ -18,18 +23,22 @@ bibTex:
   year={2016}
 }
 
-I plan to publish a new distribution that will include SVM learning with a stochastic subgradient decent 
-algorithm with embedding on the fly in the future. I also hope to publish a python wrapper and a version that uses the GPU.
 
-Easy startup
+Pele et al. plan to publish algorithm with embedding on the fly in the future. Also hope to publish a python wrapper and a version that uses the GPU.
+
+Startup
 ------------
-See IDdemo.cpp
+I currently have LearningDebug as main. it runs a Learning demo of with a one dimensional hyper-axis, learning classification of the thresholding of euclidean/scalar distance. 
 
-Compiling (the folder contains compiled binaries, thus you might not have to compile)
--------------------------------------------------------------------------------------
+Compiling 
+-----------------
 In a linux shell:
 >> make
+>> LearningDebug
+
+
+
 
 Licensing conditions
 --------------------
-See the file LICENSE.txt in this directory for conditions of use.
+See the file ID/LICENSE.txt for conditions of use.

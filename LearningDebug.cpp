@@ -35,6 +35,9 @@ double L1DistanceScalar(double p1, double p2){
   return fabs(p1-p2);
 }
 
+
+
+
 // -1(similar) , 1(non-similar)
 short classification(const std::vector<double>& W,
 		const std::vector<Pair>& non_zero, double thold) {
@@ -64,6 +67,37 @@ std::vector<double> construct_Wreg(Grid points_pair) {
 	}
 	return Wreg;
 }
+
+inline vector<int> indToPair(int arg, int size){
+	int i = arg % size;//line
+	int j = arg / size;//row
+	return {i,j};
+}
+
+inline int pairToInd(int i, int j, int n){
+	return n * i + j;
+}
+
+void makeSymmetric(std::vector<double> & W) {
+	float eps = 0;
+	int n = (int) sqrt(W.size());
+	if (abs(sqrt(W.size()) - n) > eps) {
+		cerr << "makeSymmetric: not square matrix" << endl;
+		exit(1);
+	}
+	for (size_t ind = 0; ind < W.size(); ind++) {
+		vector<int> v = indToPair(ind,n);
+		int i=v[0];
+		int j=v[1];
+		if (i > j) {
+			cout<<pairToInd(j,i,n)<<endl;
+			W[pairToInd(j,i,n)] = W[ind];
+		}
+
+	}
+}
+
+
 
 void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 		const std::vector<Pair>& volume, short tag, double & thold,
@@ -163,7 +197,7 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 }
 
 void sanityTest1Dim() {
-	bool justFromGrid = true; //taking samples from the grid itself
+	bool justFromGrid = false; //taking samples from the grid itself
 	const size_t numOfSamples = 5000000;
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
