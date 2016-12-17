@@ -90,7 +90,6 @@ void makeSymmetric(std::vector<double> & W) {
 		int i=v[0];
 		int j=v[1];
 		if (j > i) {// in the source pair-index
-			cout<<i<<","<<j<<","<<W[ind]<<","<<pairToInd(j,i,n)<<endl;
 			W[pairToInd(j,i,n)] = W[ind];//target pair-index is swapped
 		}
 
