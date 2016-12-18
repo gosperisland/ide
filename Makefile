@@ -27,7 +27,7 @@ OLDVERSIONHEADERS= ID01/IDpair.hpp ID01/ID.hpp ID01/Grid.hpp ID01/Pair.hpp
 ##########################################################
 
 clean:
-	rm *.o -f
+	rm *.o -f ${MAINNAME}
 	
 
 ${MAINNAME}: ${MAINNAME}.o	
