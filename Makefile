@@ -1,3 +1,5 @@
+#TODO: consider auto-generating with eclipse
+
 all:	LearningMain
 
 
@@ -8,10 +10,9 @@ MAINNAME= LearningMain
 #########################################################
 CXX= g++
 
-CXXFLAGS= -Wall -Wvla -Werror -g -std=c++11  
+CXXFLAGS= -Wall -Wvla -Werror -g -pg -std=c++11  
 
-
-CXXLINKFLAGSTEST= -larmadillo 
+EXTERNAL_LIBS= -larmadillo 
 #########################################################
 
 ##########################################################
@@ -30,9 +31,9 @@ clean:
 	
 
 ${MAINNAME}: ${MAINNAME}.o	
-	g++ -Wall -g -pg -std=c++11  ${MAINNAME}.o -o ${MAINNAME} -larmadillo 
+	${CXX} ${CXXFLAGS}  ${MAINNAME}.o -o $@ ${EXTERNAL_LIBS}
 
 ${MAINNAME}.o:  ${MAINNAME}.cpp ${HEADERFILES} 
-	g++  -Wall -g -pg -std=c++11  -c  ${MAINNAME}.cpp
+	${CXX} ${CXXFLAGS} -c  ${MAINNAME}.cpp
 	
 
