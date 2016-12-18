@@ -36,26 +36,8 @@ double L1DistanceScalar(double p1, double p2){
 }
 
 
-
-
-// -1(similar) , 1(non-similar)
-short classification(const std::vector<double>& W,
-		const std::vector<Pair>& non_zero, double thold) {
-	double dotProd = 0;
-	short ans = 0;
-
-	for (size_t i = 0; i < non_zero.size(); i++)
-		dotProd += non_zero[i]._weight * W[non_zero[i]._index];
-
-	if ((dotProd - thold) < 0)
-		ans = -1;
-	else
-		ans = 1;
-
-	return ans;
-}
-
-
+class Learning{
+private:
 
 std::vector<double> construct_Wreg(Grid points_pair) {
 	points_pair.double_grid();
@@ -131,6 +113,7 @@ void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 
 	}
 
+
 }
 //indices
 std::vector<double> learn_similar(
@@ -172,10 +155,15 @@ std::vector<double> learn_similar(
 		}
 
 	}
+	makeSymmetric(W);
 	return W;
 }
 
-std::vector<double> init(const std::vector<std::vector<double> >& examples,
+
+
+
+public:
+std::vector<double> run(const std::vector<std::vector<double> >& examples,
 		const std::vector<std::vector<size_t> >& indices_of_pairs,
 		const std::vector<short>& tags,
 		const std::vector<std::vector<double> >& discrete_points,
@@ -194,6 +182,29 @@ std::vector<double> init(const std::vector<std::vector<double> >& examples,
 
 	return W;
 }
+
+
+
+// -1(similar) , 1(non-similar)
+short classification(const std::vector<double>& W,
+		const std::vector<Pair>& non_zero, double thold) {
+	double dotProd = 0;
+	short ans = 0;
+
+	for (size_t i = 0; i < non_zero.size(); i++)
+		dotProd += non_zero[i]._weight * W[non_zero[i]._index];
+
+	if ((dotProd - thold) < 0)
+		ans = -1;
+	else
+		ans = 1;
+
+	return ans;
+}
+
+};
+
+
 
 void sanityTest1Dim() {
 	bool justFromGrid = false; //taking samples from the grid itself
@@ -271,11 +282,9 @@ void sanityTest1Dim() {
 	gridpair.insert(gridpair.end(), discrete_points.begin(), discrete_points.end());
 #endif
 	///////////////////
-
-	std::vector<double> W = init(examples, indices_of_pairs, tags, gridpair, 2,
+	Learning * learning = new Learning();
+	std::vector<double> W = learning->run(examples, indices_of_pairs, tags, gridpair, 2,
 			tholdArg);
-
-	makeSymmetric(W);
 
 	bool printW = true;
 	if (printW){
@@ -292,15 +301,13 @@ void sanityTest1Dim() {
 
 	//gridpar vector include discrete_points twice, one for each hyper-axis, i.e., X and Y
 
-	// std::vector<double> Wreg = l.construct_Wreg(grid);
-
 	for (size_t i = 0; i < indices_of_pairs.size(); i++) {
 		vector<double> examp0 = examples[indices_of_pairs[i][0]];
 		vector<double> examp1 = examples[indices_of_pairs[i][1]];
 
 		std::vector<Pair> vol = id_pair(examp0, examp1);
 
-		short s = classification(W, vol, tholdArg);
+		short s = learning->classification(W, vol, tholdArg);
 
 		if (s != tags[i])
 			numOfErrors++;
