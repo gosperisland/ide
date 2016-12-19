@@ -183,7 +183,7 @@ std::vector<double> run(const std::vector<std::vector<double> >& examples,
 
 
 
-// -1(similar) , 1(non-similar)
+// 1(similar) , -1(non-similar)
 short classification(const std::vector<double>& W,
 		const std::vector<Pair>& non_zero, double thold) {
 	double dotProd = 0;
@@ -193,9 +193,9 @@ short classification(const std::vector<double>& W,
 		dotProd += non_zero[i]._weight * W[non_zero[i]._index];
 
 	if ((dotProd - thold) < 0)
-		ans = -1;
-	else
 		ans = 1;
+	else
+		ans = -1;
 
 	return ans;
 }

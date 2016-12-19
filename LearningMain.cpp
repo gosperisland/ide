@@ -57,7 +57,7 @@ void sanityTest1Dim() {
 		double dist = L1DistanceScalar(examples[indices_of_pairs[i][0]][0],
 				examples[indices_of_pairs[i][1]][0]);
 		thresholdValue = 20;
-		tags[i] = dist < thresholdValue ? -1 : 1;
+		tags[i] = dist < thresholdValue ? 1 : -1;
 
 		if (tags[i] < 0)
 			counter++;
