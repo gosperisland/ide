@@ -11,7 +11,8 @@ double L1DistanceScalar(double p1, double p2){
 void sanityTest1Dim() {
 	bool justFromGrid = false; //taking samples from the grid itself
 	//const size_t numOfSamples = 5000000; //5M ~217sec
-	const size_t numOfSamples = 500000; //500k ~22sec
+	//const size_t numOfSamples = 500000; //500k ~22sec
+	const size_t numOfSamples = 50000; //50k ~2sec
 	std::vector<double> gridForX1 =
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 	//std::vector<double> gridForX1 = {0, 100};
