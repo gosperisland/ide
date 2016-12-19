@@ -81,12 +81,10 @@ void makeSymmetric(std::vector<double> & W) {
 void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 		const std::vector<Pair>& volume, short tag, double & thold,
 		const double C, size_t etha) {
-
 	std::vector<double> W_old(W);
 	size_t size = W.size();
 	size_t sparse_size = volume.size();
 	double dotProd = 0;
-
 
 	//ID(X_pi_1, X_pi_2) * W
 	for (size_t i = 0; i < sparse_size; i++)
@@ -95,23 +93,16 @@ void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 	// 1 - { (ID(X_pi_1, X_pi_2) * W) - threshold } * y_i
 	if ((1 - ((dotProd - thold) * tag)) > 0) {
 		for (auto& simplex_point : volume) {
-
-			W[simplex_point._index] += (1.0 / (double) etha)
-					* (C * tag * simplex_point._weight);
-			W[simplex_point._index] =
-					W[simplex_point._index] < 0 ? 0 : W[simplex_point._index];
+			W[simplex_point._index] += (1.0 / (double) etha) * (C * tag * simplex_point._weight);
+			W[simplex_point._index] = W[simplex_point._index] < 0 ? 0 : W[simplex_point._index];
 		}
 		//thold -= ((1.0 / (double) etha) * (C * tag));
-
 	}
 
 	for (size_t i = 0; i < size; i++) {
 		W[i] -= (1.0 / (double) etha) * ((W_old[i] - Wreg[i]));
 		W[i] = W[i] < 0 ? 0 : W[i];
-
 	}
-
-
 }
 //indices
 std::vector<double> learn_similar(
