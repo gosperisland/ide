@@ -92,15 +92,10 @@ void sanityTest1Dim() {
 	std::vector<double> W = learning->run(examples, indices_of_pairs, tags, gridpair, 2,
 			tholdArg);
 
-	bool printW = true;
-	if (printW){
-		cout << "W.size(): " << W.size() << " \nW:" << endl;
-		for (size_t i = 0; i < W.size(); i++) {
-			cout << W[i] << " , ";
-			if ((i + 1) % (int) sqrt(W.size()) == 0) {
-				cout << endl;
-			}
-		}
+	bool doPrintW = true;
+	if (doPrintW){
+		//Flattened
+		printFlattenedSquare(W);
 	}
 	Grid grid(gridpair);
 	IDpair id_pair(grid);// is not being used as an input to SGD-init but created inside
