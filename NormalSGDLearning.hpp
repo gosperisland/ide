@@ -1,3 +1,8 @@
+#ifndef _NORMAL_SGD_LEARNING_H
+#define _NORMAL_SGD_LEARNING_H
+
+#include "SGDLearning.hpp"
+
 class NormalSGDLearning : public SGDLearning{
 	virtual ~NormalSGDLearning(){
 
@@ -82,5 +87,5 @@ protected:
 };
 
 
-
+#endif
 

@@ -9,6 +9,8 @@ double L1DistanceScalar(double p1, double p2){
 
 
 
+
+
 void sanityTest1Dim() {
 	bool justFromGrid = false; //taking samples from the grid itself
 	//const size_t numOfSamples = 5000000; //5M ~217sec
