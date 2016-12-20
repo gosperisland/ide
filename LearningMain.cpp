@@ -1,4 +1,5 @@
-#include "Learning.hpp"
+#include "SGDLearning.hpp"
+#include "NormalSGDLearning.hpp"
 #include <ctime>
 
 
@@ -85,7 +86,7 @@ void sanityTest1Dim() {
 	gridpair.insert(gridpair.end(), discrete_points.begin(), discrete_points.end());
 #endif
 	///////////////////
-	Learning * learning = new Learning();
+	SGDLearning * learning = new NormalSGDLearning();
 	std::vector<double> W = learning->run(examples, indices_of_pairs, tags, gridpair, 2,
 			tholdArg);
 
@@ -115,6 +116,7 @@ void sanityTest1Dim() {
 		if (s != tags[i])
 			numOfErrors++;
 	}
+	delete learning;
 	tend = time(0);
 	cout << "Number of errors: " << numOfErrors << endl;
 	cout << "Error rate: " << (double) numOfErrors / tags.size() << endl;
