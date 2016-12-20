@@ -3,8 +3,8 @@
 
 #include "SGDLearning.hpp"
 
-class NormalSGDLearning : public SGDLearning{
-	virtual ~NormalSGDLearning(){
+class NormalSGDLearning: public SGDLearning {
+	virtual ~NormalSGDLearning() {
 
 	}
 
@@ -25,9 +25,12 @@ protected:
 		// 1 - { (ID(X_pi_1, X_pi_2) * W) - threshold } * y_i
 		if ((1 - ((dotProd - thold) * tag)) > 0) {
 			for (auto& simplex_point : volume) {
-				W[simplex_point._index] += (1.0 / (double) etha) * (C * tag * simplex_point._weight);
-				if (useNonNeagtiveStep){
-					W[simplex_point._index] = W[simplex_point._index] < 0 ? 0 : W[simplex_point._index];
+				W[simplex_point._index] += (1.0 / (double) etha)
+						* (C * tag * simplex_point._weight);
+				if (useNonNeagtiveStep) {
+					W[simplex_point._index] =
+							W[simplex_point._index] < 0 ?
+									0 : W[simplex_point._index];
 				}
 			}
 			//thold -= ((1.0 / (double) etha) * (C * tag));
@@ -35,14 +38,15 @@ protected:
 
 		for (size_t i = 0; i < size; i++) {
 			W[i] -= (1.0 / (double) etha) * ((W_old[i] - Wreg[i]));
-			if (useNonNeagtiveStep){
+			if (useNonNeagtiveStep) {
 				W[i] = W[i] < 0 ? 0 : W[i];
 			}
 		}
 	}
 
 	virtual std::vector<double> learn_similar(
-			const std::vector<std::vector<double> >& examples, const IDpair& idpair,
+			const std::vector<std::vector<double> >& examples,
+			const IDpair& idpair,
 			const std::vector<std::vector<size_t> >& indices_of_pairs,
 			const std::vector<short>& tags, const std::vector<double>& Wreg,
 			const double C, double& thold) {
@@ -76,7 +80,8 @@ protected:
 						examples[indices_of_pairs[random_index][0]],
 						examples[indices_of_pairs[random_index][1]]);
 
-				SGD_similar(W, Wreg, volume, tags[random_index], thold, C, i + 1);
+				SGD_similar(W, Wreg, volume, tags[random_index], thold, C,
+						i + 1);
 			}
 
 		}
@@ -86,6 +91,9 @@ protected:
 
 };
 
+SGDLearning * createSGDLearning() {
+	return new NormalSGDLearning();
+}
 
 #endif
 

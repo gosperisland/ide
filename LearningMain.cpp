@@ -88,7 +88,7 @@ void sanityTest1Dim() {
 	gridpair.insert(gridpair.end(), discrete_points.begin(), discrete_points.end());
 #endif
 	///////////////////
-	SGDLearning * learning = new NormalSGDLearning();
+	SGDLearning * learning = createSGDLearning();
 	std::vector<double> W = learning->run(examples, indices_of_pairs, tags, gridpair, 2,
 			tholdArg);
 
