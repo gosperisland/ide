@@ -20,7 +20,12 @@ void sanityTest1Dim() {
 			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 	//std::vector<double> gridForX1 = {0, 100};
 	std::vector<double> gridForX2 = { 0, 200 };
+	int dim =1;
 	std::vector<std::vector<double> > discrete_points = { gridForX1 };
+	for (int i=1;i<dim;i++)
+	{
+		discrete_points.push_back( gridForX1 );
+	}
 	//std::vector<std::vector<double> > discrete_points = {{0,0},{0,200},{100,0},{100,200}};
 	std::vector<std::vector<double> > examples;
 	std::vector<std::vector<size_t> > indices_of_pairs;
