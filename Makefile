@@ -21,7 +21,7 @@ EXTERNAL_LIBS= -larmadillo
 ##########################################################
 
 
-HEADERFILES= SGDLearning.hpp NormalSGDLearning.hpp ID/IDpair.hpp ID/ID.hpp ID/Grid.hpp ID/Pair.hpp 
+HEADERFILES=  SGDLearning.hpp NormalSGDLearning.hpp ID/IDpair.hpp ID/ID.hpp ID/Grid.hpp ID/Pair.hpp 
 
 
 OLDVERSIONHEADERS= ID01/IDpair.hpp ID01/ID.hpp ID01/Grid.hpp ID01/Pair.hpp
