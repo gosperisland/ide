@@ -12,7 +12,8 @@ protected:
 	void SGD_similar(std::vector<double>& W, const std::vector<double>& Wreg,
 			const std::vector<Pair>& volume, short tag, double & thold,
 			const double C, size_t etha) {
-		bool useNonNeagtiveStep = false;
+		bool useNonNeagtiveStep = true;
+
 		std::vector<double> W_old(W);
 		size_t size = W.size();
 		size_t sparse_size = volume.size();
@@ -23,7 +24,7 @@ protected:
 			dotProd += volume[i]._weight * W[volume[i]._index];
 
 		// 1 - { (ID(X_pi_1, X_pi_2) * W) - threshold } * y_i
-		if ((1 - ((dotProd - thold) * tag)) > 0) {
+		if ((1 - ((dotProd - thold) * tag)) > 0) {//sign
 			for (auto& simplex_point : volume) {
 				W[simplex_point._index] += (1.0 / (double) etha)
 						* (C * tag * simplex_point._weight);
@@ -35,13 +36,15 @@ protected:
 			}
 			//thold -= ((1.0 / (double) etha) * (C * tag));
 		}
-
+		//printFlattenedSquare(W);
 		for (size_t i = 0; i < size; i++) {
-			W[i] -= (1.0 / (double) etha) * ((W_old[i] - Wreg[i]));
+			W[i] -= (1.0 * C / (double) etha) * ((W[i] - Wreg[i]));
 			if (useNonNeagtiveStep) {
-				W[i] = W[i] < 0 ? 0 : W[i];
+				//decided to skip it
+				//W[i] = W[i] < 0 ? 0 : W[i];
 			}
 		}
+
 	}
 
 	virtual std::vector<double> learn_similar(
