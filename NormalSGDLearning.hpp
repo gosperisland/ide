@@ -40,7 +40,7 @@ protected:
 		for (size_t i = 0; i < size; i++) {
 			W[i] -= (1.0 * C / (double) etha) * ((W[i] - Wreg[i]));
 			if (useNonNeagtiveStep) {
-				//decided to skip it
+				//if we get closer to the regularizer we can't go below zero
 				//W[i] = W[i] < 0 ? 0 : W[i];
 			}
 		}
