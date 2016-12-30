@@ -12,7 +12,6 @@ double L1DistanceScalar(double p1, double p2){
 double L2Distance(vec p1, vec p2){
   vec diff = (p1-p2);
   double res =  sqrt(dot(diff,diff));
-  //cout<<res<<",";
   return res;
 }
 
@@ -24,12 +23,19 @@ void sgdMain() {
 	bool useJustFromGrid = false; //taking samples from the grid itself
 	bool useUnifiedGrid =true;
 	bool doPrintW = false;
+	thresholdValue = 20;
+	//vec rep = thresholdValue * ones(dim,1);
+	//thresholdValue = sqrt(dot(rep,rep));
+	cout<<"thresholdValue: "<<thresholdValue<<endl;
+
+
 	if (useJustFromGrid && !useUnifiedGrid){
 		cerr<<"sgdMain (useJustFromGrid && !useUnifiedGrid) not supported.";
 		exit(1);
 	}
 	const size_t numOfSamples = 5000000; //5M ~217sec
 	//const size_t numOfSamples = 500000; //500k ~22sec
+	//const size_t numOfSamples = 250000;
 	//const size_t numOfSamples = 50000; //50k ~2sec
 	//const size_t numOfSamples = 500;
 
@@ -78,6 +84,7 @@ void sgdMain() {
 			vector< vec > A;
 			for (int d = 0; d < dim; d++)
 				A.push_back(randi<vec>(numOfSamples / 2, distr_param(0, 100)));
+
 			for (size_t j = 0; j < A[0].size(); j++) {
 				vector<double> cur_vec;
 				for (int d = 0; d < dim; d++)
@@ -99,7 +106,7 @@ void sgdMain() {
 
 		double dist = L2Distance(examples[indices_of_pairs[i][0]],
 				examples[indices_of_pairs[i][1]]);
-		thresholdValue = 20;
+
 		tags[i] = dist < thresholdValue ? 1 : -1;
 
 		if (tags[i] < 0)
