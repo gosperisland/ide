@@ -9,30 +9,61 @@ double L1DistanceScalar(double p1, double p2){
   return fabs(p1-p2);
 }
 
+double L2Distance(vec p1, vec p2){
+  vec diff = (p1-p2);
+  double res =  sqrt(dot(diff,diff));
+  //cout<<res<<",";
+  return res;
+}
 
 
 
 
-void sgdTest(int dim) {
-	bool justFromGrid = false; //taking samples from the grid itself
-	//const size_t numOfSamples = 5000000; //5M ~217sec
+void sgdMain() {
+	int dim = 1;//default value
+	bool useJustFromGrid = false; //taking samples from the grid itself
+	bool useUnifiedGrid =true;
+	bool doPrintW = false;
+	if (useJustFromGrid && !useUnifiedGrid){
+		cerr<<"sgdMain (useJustFromGrid && !useUnifiedGrid) not supported.";
+		exit(1);
+	}
+	const size_t numOfSamples = 5000000; //5M ~217sec
 	//const size_t numOfSamples = 500000; //500k ~22sec
-	const size_t numOfSamples = 50000; //50k ~2sec
-	std::vector<double> gridForX1 =
-			{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-	//std::vector<double> gridForX1 = {0, 100};
-	std::vector<double> gridForX2 = { 0, 200 };
+	//const size_t numOfSamples = 50000; //50k ~2sec
+	//const size_t numOfSamples = 500;
+
 	std::vector<std::vector<double> > discrete_points;
-	for (int i=0; i< dim; i++){
+	std::vector<double> gridForX1;
+	if (useUnifiedGrid){//unified for all dimensions of the feature vectors
+
+		gridForX1 =
+				{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+
+		for (int d=0; d< dim; d++){
+			discrete_points.push_back(gridForX1);
+		}
+	}
+	else{//specify each grid separately
+
+		gridForX1 =
+						{ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+
+		std::vector<double> gridForX2 = { 0, 200 };
 		discrete_points.push_back(gridForX1);
+		discrete_points.push_back(gridForX2);
+		dim = discrete_points.size();
 	}
 	//std::vector<std::vector<double> > discrete_points = {{0,0},{0,200},{100,0},{100,200}};
-	std::vector<std::vector<double> > examples;
+	std::vector<vector<double> > examples;
 	std::vector<std::vector<size_t> > indices_of_pairs;
 	//arma_rng::set_seed_random();
-	if (justFromGrid) {
+	if (useJustFromGrid) {
 		for (size_t j = 0; j < gridForX1.size(); j++) {
-			examples.push_back( { gridForX1[j] });
+			vector<double> cur_vec;
+			for (int d = 0; d < dim; d++)
+				cur_vec.push_back(discrete_points[d][j]);
+			examples.push_back( cur_vec );
 		}
 		for (size_t i = 0; i < gridForX1.size(); i++) {
 			for (size_t j = 0; j < gridForX1.size(); j++) {
@@ -44,18 +75,21 @@ void sgdTest(int dim) {
 	} else {
 		// loop for creating pairs
 		for (int i = 0; i < 2; i++) {
-			vec A = randi<vec>(numOfSamples / 2, distr_param(0, 100));
-			vec B = randi<vec>(numOfSamples / 2, distr_param(0, 200));
-
-			for (size_t j = 0; j < A.size(); j++) {
-				vector<double> p1 = { A(j) };
-				examples.push_back(p1);
+			vector< vec > A;
+			for (int d = 0; d < dim; d++)
+				A.push_back(randi<vec>(numOfSamples / 2, distr_param(0, 100)));
+			for (size_t j = 0; j < A[0].size(); j++) {
+				vector<double> cur_vec;
+				for (int d = 0; d < dim; d++)
+					cur_vec.push_back( A[d](j) );
+				examples.push_back(cur_vec);
 
 			}
+
 		}
 		for (size_t i = 0; i < numOfSamples / 2; i++) {
-			vector<size_t> p1 = { i, i + numOfSamples / 2 }; //0000001000,0000001000
-			indices_of_pairs.push_back(p1);
+			vector<size_t> cur_pair = { i, i + numOfSamples / 2 }; //0000001000,0000001000
+			indices_of_pairs.push_back(cur_pair);
 		}
 	}
 	vector<short> tags(indices_of_pairs.size(), 0);
@@ -63,8 +97,8 @@ void sgdTest(int dim) {
 	int counter = 0;
 	for (size_t i = 0; i < indices_of_pairs.size(); i++) {
 
-		double dist = L1DistanceScalar(examples[indices_of_pairs[i][0]][0],
-				examples[indices_of_pairs[i][1]][0]);
+		double dist = L2Distance(examples[indices_of_pairs[i][0]],
+				examples[indices_of_pairs[i][1]]);
 		thresholdValue = 20;
 		tags[i] = dist < thresholdValue ? 1 : -1;
 
@@ -97,7 +131,7 @@ void sgdTest(int dim) {
 	std::vector<double> W = learning->run(examples, indices_of_pairs, tags, gridpair, 0.5,
 			tholdArg);
 
-	bool doPrintW = true;
+
 	if (doPrintW){
 		//Flattened
 		printFlattenedSquare(W);
@@ -129,6 +163,6 @@ void sgdTest(int dim) {
 
 
 int main() {
-	sgdTest(1);
+	sgdMain();
 	return 0;
 }
