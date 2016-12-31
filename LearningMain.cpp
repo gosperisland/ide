@@ -18,14 +18,15 @@ double L2Distance(vec p1, vec p2){
 
 
 
-void sgdMain() {
+vvoid sgdMain() {
 	int dim = 1;//default value
 	bool useJustFromGrid = false; //taking samples from the grid itself
 	bool useUnifiedGrid =true;
 	bool doPrintW = false;
-	thresholdValue = 20;
-	//vec rep = thresholdValue * ones(dim,1);
-	//thresholdValue = sqrt(dot(rep,rep));
+	thresholdValue = 40;
+	vec rep = thresholdValue * ones(dim,1);
+	thresholdValue = sqrt(dot(rep,rep));
+	cout<<"Dimension:"<<dim<<endl;
 	cout<<"thresholdValue: "<<thresholdValue<<endl;
 
 
